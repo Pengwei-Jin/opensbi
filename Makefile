@@ -282,7 +282,7 @@ $(build_dir)/%.bin: $(build_dir)/%.elf
 	$(call compile_objcopy,$@,$<)
 
 $(build_dir)/%.elf: $(build_dir)/%.o $(build_dir)/%.elf.ld $(platform_build_dir)/lib/libplatsbi.a
-	$(call compile_elf,$@,$@.ld,$< $(platform_build_dir)/lib/libplatsbi.a)
+	$(call compile_elf,$@,$@.ld,$< $(platform_build_dir)/lib/libplatsbi.a /opt/riscv-elf32/lib/gcc/riscv32-unknown-elf/11.1.0/libgcc.a)
 
 $(platform_build_dir)/%.ld: $(src_dir)/%.ldS
 	$(call compile_cpp,$@,$<)

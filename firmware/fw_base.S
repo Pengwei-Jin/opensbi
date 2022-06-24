@@ -180,7 +180,18 @@ _relocate_done:
 
 	/* Setup scratch space for all the HARTs*/
 	la	tp, _fw_end
-	mul	a5, s7, s8
+	mv a5, s7
+	mv s9, s8
+	mv s10, a5
+	li a5, 0
+label12:
+	andi s11, s9, 1
+	beqz s11, label11
+	add a5, a5, s10
+label11:
+	srli s9, s9, 0x1
+	slli s10, s10, 0x1
+	bnez s9, label12
 	add	tp, tp, a5
 	/* Keep a copy of tp */
 	add	t3, tp, zero
@@ -190,7 +201,18 @@ _relocate_done:
 	li	t1, 0
 _scratch_init:
 	add	tp, t3, zero
-	mul	a5, s8, t1
+	mv a5, s8
+	mv s9, t1
+	mv s10, a5
+	li a5, 0
+label22:
+	andi s11, s9, 1
+	beqz s11, label21
+	add a5, a5, s10
+label21:
+	srli s9, s9, 0x1
+	slli s10, s10, 0x1
+	bnez s9, label22
 	sub	tp, tp, a5
 	li	a5, SBI_SCRATCH_SIZE
 	sub	tp, tp, a5
@@ -199,7 +221,18 @@ _scratch_init:
 	/* Store fw_start and fw_size in scratch space */
 	la	a4, _fw_start
 	la	a5, _fw_end
-	mul	t0, s7, s8
+	mv t0, s7
+	mv s9, s8
+	mv s10, t0
+	li t0, 0
+label32:
+	andi s11, s9, 1
+	beqz s11, label31
+	add t0, t0, s10
+label31:
+	srli s9, s9, 0x1
+	slli s10, s10, 0x1
+	bnez s9, label32
 	add	a5, a5, t0
 	sub	a5, a5, a4
 	REG_S	a4, SBI_SCRATCH_FW_START_OFFSET(tp)
@@ -366,9 +399,31 @@ _start_warm:
 
 	/* find the scratch space for this hart */
 	la	tp, _fw_end
-	mul	a5, s7, s8
+	mv a5, s7
+	mv s9, s8
+	mv s10, a5
+	li a5, 0
+label42:
+	andi s11, s9, 1
+	beqz s11, label41
+	add a5, a5, s10
+label41:
+	srli s9, s9, 0x1
+	slli s10, s10, 0x1
+	bnez s9, label42
 	add	tp, tp, a5
-	mul	a5, s8, s6
+	mv a5, s8
+	mv s9, s6
+	mv s10, a5
+	li a5, 0
+label52:
+	andi s11, s9, 1
+	beqz s11, label51
+	add a5, a5, s10
+label51:
+	srli s9, s9, 0x1
+	slli s10, s10, 0x1
+	bnez s9, label52
 	sub	tp, tp, a5
 	li	a5, SBI_SCRATCH_SIZE
 	sub	tp, tp, a5
@@ -427,10 +482,32 @@ _hartid_to_scratch:
 	lw	s0, SBI_PLATFORM_HART_STACK_SIZE_OFFSET(s2)
 	lw	s2, SBI_PLATFORM_HART_COUNT_OFFSET(s2)
 #endif
-	mul	s2, s2, s0
+	mv s2, s2
+	mv s9, s0
+	mv s10, s2
+	li s2, 0
+label62:
+	andi s11, s9, 1
+	beqz s11, label61
+	add s2, s2, s10
+label61:
+	srli s9, s9, 0x1
+	slli s10, s10, 0x1
+	bnez s9, label62
 	la	s1, _fw_end
 	add	s1, s1, s2
-	mul	s2, s0, a0
+	mv s2, s0
+	mv s9, s0
+	mv s10, a0
+	li s2, 0
+label72:
+	andi s11, s9, 1
+	beqz s11, label71
+	add s2, s2, s10
+label71:
+	srli s9, s9, 0x1
+	slli s10, s10, 0x1
+	bnez s9, label72
 	sub	s1, s1, s2
 	li	s2, SBI_SCRATCH_SIZE
 	sub	a0, s1, s2
